@@ -1,0 +1,28 @@
+name: Build and Push to ACR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Login to ACR
+        run: |
+          docker login myreactacr98765.azurecr.io \
+            --username ${{ secrets.ACR_USERNAME }} \
+            --password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t myreactacr98765.azurecr.io/react-app:latest .
+
+      - name: Push to ACR
+        run: |
+          docker push myreactacr98765.azurecr.io/react-app:latest
